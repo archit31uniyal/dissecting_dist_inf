@@ -1,0 +1,150 @@
+{
+    "name": "compress_loss_attack_scratch",
+    "start time": "2023-03-29 00:45:54.641131",
+    "attack_config": {
+        "train_config": {
+            "data_config": {
+                "name": "celeba",
+                "prop": "Male",
+                "value": 0.5,
+                "split": "adv",
+                "drop_senstive_cols": false,
+                "scale": 1.0,
+                "augment": false,
+                "classify": "Smiling",
+                "cwise_samples": null,
+                "squeeze": false,
+                "processed_variant": false,
+                "prune": 0
+            },
+            "epochs": 10,
+            "learning_rate": 0.0001,
+            "batch_size": 0,
+            "misc_config": null,
+            "lr_scheduler": null,
+            "verbose": false,
+            "num_models": 0,
+            "offset": 0,
+            "weight_decay": 0.001,
+            "get_best": true,
+            "cpu": false,
+            "expect_extra": true,
+            "save_every_epoch": false,
+            "extra_info": null,
+            "regression": false,
+            "multi_class": false,
+            "label_noise": 0,
+            "model_arch": "resnet50_new",
+            "parallel": false,
+            "early_stopping": null
+        },
+        "values": [
+            0.8
+        ],
+        "black_box": {
+            "attack_type": [
+                "loss_and_threshold"
+            ],
+            "ratios": [
+                1.0
+            ],
+            "batch_size": 1280,
+            "num_adv_models": 30,
+            "granularity": 0.005,
+            "preload": true,
+            "multi": null,
+            "multi2": null,
+            "multi_class": false,
+            "save": false,
+            "tune_final_threshold": false,
+            "Start_epoch": 1,
+            "End_epoch": 20,
+            "relative_threshold": false,
+            "loss_variant": false,
+            "random_order": false,
+            "log_odds_order": false,
+            "kl_frac": 0.8,
+            "kl_voting": false,
+            "generative_attack": null,
+            "order_name": null,
+            "geo_mean": false,
+            "regression_config": null,
+            "merlin_mean": 0.0,
+            "merlin_std": 0.5,
+            "merlin_neighbors": 10
+        },
+        "white_box": null,
+        "tries": 10,
+        "num_victim_models": 10,
+        "on_cpu": true,
+        "adv_misc_config": null,
+        "num_total_adv_models": 1000,
+        "victim_local_attack": false,
+        "victim_model_arch": "resnet50_new",
+        "adv_model_arch": "resnet50_new",
+        "adv_processed_variant": false,
+        "adv_target_epoch": null,
+        "victim_target_epoch": null
+    },
+    "result": {
+        "loss_and_threshold": {
+            "0.8": {
+                "adv_acc": [
+                    66.66666666666666,
+                    63.33333333333333,
+                    60.0,
+                    56.666666666666664,
+                    65.0,
+                    60.0,
+                    60.0,
+                    61.66666666666667,
+                    60.0,
+                    65.0
+                ],
+                "victim_acc": [
+                    [
+                        40.0,
+                        65.0
+                    ],
+                    [
+                        30.0,
+                        55.00000000000001
+                    ],
+                    [
+                        40.0,
+                        50.0
+                    ],
+                    [
+                        40.0,
+                        70.0
+                    ],
+                    [
+                        45.0,
+                        60.0
+                    ],
+                    [
+                        30.0,
+                        40.0
+                    ],
+                    [
+                        40.0,
+                        50.0
+                    ],
+                    [
+                        40.0,
+                        55.00000000000001
+                    ],
+                    [
+                        30.0,
+                        50.0
+                    ],
+                    [
+                        50.0,
+                        50.0
+                    ]
+                ]
+            }
+        }
+    },
+    "save time": "2023-03-29 01:41:20.873356"
+}

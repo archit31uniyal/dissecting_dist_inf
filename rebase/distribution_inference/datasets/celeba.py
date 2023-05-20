@@ -14,6 +14,7 @@ import distribution_inference.datasets.base as base
 import distribution_inference.datasets.utils as utils
 import distribution_inference.models.core as models_core
 from distribution_inference.config import TrainConfig, DatasetConfig
+# from distribution_inference.models.core import Resnet18WrapperForAttack
 from distribution_inference.training.utils import load_model
 
 
@@ -27,7 +28,7 @@ class DatasetInformation(base.DatasetInformation):
                                      'Wavy_Hair', 'High_Cheekbones'],
                          values={"Male": ratios, "Young": ratios,
                                  'Wavy_Hair': ratios, 'High_Cheekbones': ratios},
-                         supported_models=["inception", "alexnet", "mlp2"],
+                         supported_models=["inception", "alexnet", "mlp2", "resnet50", 'resnet50_new', "resnet18", 'resnet18_new'],
                          default_model="alexnet",
                          epoch_wise=epoch_wise)
         self.preserve_properties = ['Smiling', 'Young', 'Male', 'Attractive']
@@ -54,6 +55,16 @@ class DatasetInformation(base.DatasetInformation):
             model = models_core.InceptionModel(
                 fake_relu=fake_relu,
                 latent_focus=latent_focus)
+        elif model_arch =='resnet50' or model_arch == 'resnet50_new':
+            model = models_core.ResNet()
+            # print(ch.load("/p/compressionleakage/logs/Compressed/compression_cv/models/celeba/pretrained_resnet50_celeba.pt"))
+            if model_arch == 'resnet50':
+                model.load_state_dict(ch.load("/p/compressionleakage/logs/Compressed/compression_cv/models/celeba/pretrained_resnet50_celeba.pt"))
+        elif model_arch =='resnet18' or model_arch == 'resnet18_new':
+            model = models_core.ResNet18()
+            # print(ch.load("/p/compressionleakage/logs/Compressed/compression_cv/models/celeba/pretrained_resnet50_celeba.pt"))
+            if model_arch == 'resnet18':
+                model.load_state_dict(ch.load("/p/compressionleakage/logs/Compressed/compression_cv/models/celeba/pretrained_resnet18_celeba.ch"))
         elif model_arch == "alexnet":
             model = models_core.MyAlexNet(
                 fake_relu=fake_relu,
@@ -272,6 +283,7 @@ class CelebACustomBinary(base.CustomDataset):
             self.filenames, self.attr_dict,
             classify, prop, ratio, cwise_sample,
             indices=indices)
+        # self.ids = None
 
         if shuffle:
             np.random.shuffle(self.filenames)
@@ -443,6 +455,7 @@ class CelebaWrapper(base.CustomDatasetWrapper):
         attr_dict = attrs.to_dict(orient='index')
 
         # Use relevant file split information
+        
         filelist_train = os.path.join(
             self.info_object.base_data_dir,
             "splits", "75_25", self.split, "train.txt")
@@ -450,14 +463,30 @@ class CelebaWrapper(base.CustomDatasetWrapper):
             self.info_object.base_data_dir,
             "splits", "75_25", self.split, "test.txt")
 
+        # filelist_train_vic = os.path.join(
+        #     self.info_object.base_data_dir,
+        #     "splits", "75_25", 'victim', "train.txt")
+        # filelist_test_vic = os.path.join(
+        #     self.info_object.base_data_dir,
+        #     "splits", "75_25", 'victim', "test.txt")
+        
+        # filelist_train_adv = os.path.join(
+        #     self.info_object.base_data_dir,
+        #     "splits", "75_25", 'adv', "train.txt")
+        # filelist_test_adv = os.path.join(
+        #     self.info_object.base_data_dir,
+        #     "splits", "75_25", 'adv', "test.txt")
+
         # Define number of sub-samples
         prop_wise_subsample_sizes = {
             "Smiling": {
                 "adv": {
-                    "Male": (16000, 1500)
+                    "Male": (16000, 1500),
+                    "Young": (9000, 1100)
                 },
                 "victim": {
-                    "Male": (45000, 4000)
+                    "Male": (45000, 4000),
+                    "Young": (30000, 3000),
                 }
             },
             "Male": {
@@ -491,6 +520,32 @@ class CelebaWrapper(base.CustomDatasetWrapper):
 
         # Create datasets
         indices = [None, None] if indexed_data is None else indexed_data
+        # ds_train_victim = CelebACustomBinary(
+        #     self.classify, filelist_train_vic, attr_dict,
+        #     self.prop, self.ratio, cwise_sample[0],
+        #     transform=self.train_transforms,
+        #     features=features, label_noise=self.label_noise,
+        #     indices=indices[0])
+        # ds_train_adv = CelebACustomBinary(
+        #     self.classify, filelist_train_adv, attr_dict,
+        #     self.prop, self.ratio, cwise_sample[0],
+        #     transform=self.train_transforms,
+        #     features=features, label_noise=self.label_noise,
+        #     indices=indices[0])
+        # ds_val_victim = CelebACustomBinary(
+        #     self.classify, filelist_test_vic, attr_dict,
+        #     self.prop, self.ratio, cwise_sample[0],
+        #     transform=self.train_transforms,
+        #     features=features, label_noise=self.label_noise,
+        #     indices=indices[0])
+        # ds_val_adv = CelebACustomBinary(
+        #     self.classify, filelist_test_adv, attr_dict,
+        #     self.prop, self.ratio, cwise_sample[1],
+        #     transform=self.test_transforms,
+        #     features=features,
+        #     indices=indices[1],)
+        # ds_train = ch.utils.data.ConcatDataset([ds_train_adv, ds_train_victim])
+        # ds_val = ch.utils.data.ConcatDataset([ds_val_adv, ds_val_victim])
         ds_train = CelebACustomBinary(
             self.classify, filelist_train, attr_dict,
             self.prop, self.ratio, cwise_sample[0],
@@ -499,10 +554,11 @@ class CelebaWrapper(base.CustomDatasetWrapper):
             indices=indices[0])
         ds_val = CelebACustomBinary(
             self.classify, filelist_test, attr_dict,
-            self.prop, self.ratio, cwise_sample[1],
-            transform=self.test_transforms,
-            features=features,
-            indices=indices[1],)
+            self.prop, self.ratio, cwise_sample[0],
+            transform=self.train_transforms,
+            features=features, label_noise=self.label_noise,
+            indices=indices[0])
+       
         return ds_train, ds_val
     
     def get_used_indices(self):
@@ -514,12 +570,12 @@ class CelebaWrapper(base.CustomDatasetWrapper):
                     shuffle: bool = True,
                     eval_shuffle: bool = False,
                     val_factor: int = 2,
-                    num_workers: int = 24,
-                    prefetch_factor: int = 20,
+                    num_workers: int = 4,
+                    prefetch_factor: int = 4,
                     indexed_data = None):
         self.ds_train, self.ds_val = self.load_data(indexed_data)
-        self._train_ids_before = self.ds_train.ids
-        self._val_ids_before = self.ds_val.ids
+        # self._train_ids_before = self.ds_train.ids
+        # self._val_ids_before = self.ds_val.ids
         return super().get_loaders(batch_size, shuffle=shuffle,
                                    eval_shuffle=eval_shuffle,
                                    val_factor=val_factor,
@@ -527,39 +583,40 @@ class CelebaWrapper(base.CustomDatasetWrapper):
                                    prefetch_factor=prefetch_factor)
 
     def get_save_dir(self, train_config: TrainConfig, model_arch: str) -> str:
-        base_models_dir = self.info_object.base_models_dir
+        # base_models_dir = self.info_object.base_models_dir
+        base_models_dir = "/p/compressionleakage/logs/Compressed/compression_cv/models/celeba"
         subfolder_prefix = os.path.join(
             self.split, self.prop, str(self.ratio)
         )
 
         if train_config.misc_config:
             if train_config.misc_config.shuffle_defense_config is None or (train_config.misc_config.shuffle_defense_config.desired_value == self.ratio):
-                if train_config.misc_config.adv_config:
+                if train_config.misc_config.ft_config:
                     # Extract epsilon to be used
-                    adv_folder_prefix = "adv_train_"
-                    adv_config = train_config.misc_config.adv_config
-                    if adv_config.scale_by_255:
-                        # Use 'int' value
-                        epsilon_val = int(adv_config.epsilon * 255)
-                        adv_folder_prefix += ("%d" % epsilon_val)
-                    else:
-                        # If actual epsilon value, use as it is
-                        epsilon_val = adv_config.epsilon
-                        adv_folder_prefix += ("%.4f" % epsilon_val)
+                    adv_folder_prefix = "ft_train_"
+                    adv_config = train_config.misc_config.ft_config
+                    # if adv_config.scale_by_255:
+                    #     # Use 'int' value
+                    #     epsilon_val = int(adv_config.epsilon * 255)
+                    #     adv_folder_prefix += ("%d" % epsilon_val)
+                    # else:
+                    #     # If actual epsilon value, use as it is
+                    #     epsilon_val = adv_config.epsilon
+                    adv_folder_prefix += ("%.4f" % adv_config.sparsity)
                     subfolder_prefix = os.path.join(
-                        subfolder_prefix, adv_folder_prefix)
-            else:
-                shuffle_defense_config = train_config.misc_config.shuffle_defense_config
-                if shuffle_defense_config.augment:
-                    if shuffle_defense_config.use_mixup:
-                        shuff_name = "augment_mixup"
-                    else:
-                        shuff_name = "augment"
-                else:
-                    shuff_name = shuffle_defense_config.sample_type
-                base_models_dir = os.path.join(base_models_dir, "shuffle_defense",
-                                               shuff_name,
-                                               "%.2f" % shuffle_defense_config.desired_value)
+                    subfolder_prefix, adv_folder_prefix)
+            # else:
+            #     shuffle_defense_config = train_config.misc_config.shuffle_defense_config
+            #     if shuffle_defense_config.augment:
+            #         if shuffle_defense_config.use_mixup:
+            #             shuff_name = "augment_mixup"
+            #         else:
+            #             shuff_name = "augment"
+            #     else:
+            #         shuff_name = shuffle_defense_config.sample_type
+            #     base_models_dir = os.path.join(base_models_dir, "shuffle_defense",
+            #                                    shuff_name,
+            #                                    "%.2f" % shuffle_defense_config.desired_value)
 
         # Standard logic
         if model_arch == "None":
@@ -588,7 +645,8 @@ class CelebaWrapper(base.CustomDatasetWrapper):
                    on_cpu: bool = False,
                    model_arch: str = None) -> nn.Module:
         model = self.info_object.get_model(cpu=on_cpu, model_arch=model_arch)
-        return load_model(model, path, on_cpu=on_cpu)
+        model_ = load_model(model, path, on_cpu=on_cpu)
+        return model_
 
 
 def _get_attributes(base_data_dir):

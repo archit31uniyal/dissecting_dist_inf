@@ -1,0 +1,50 @@
+{
+    "train_config": {
+        "data_config": {
+            "name": "celeba",
+            "prop": "Male",
+            "classify": "Smiling",
+            "split": "adv",
+            "value": 0.5,
+            "processed_variant": false
+        },
+        "misc_config": {
+            "ft_config": {
+                "sparsity": 0.5
+            }
+        },
+        "epochs": 10,
+        "learning_rate": 1e-4,
+        "batch_size": 0,
+        "weight_decay": 1e-3,
+        "num_models": 10,
+        "get_best": true,
+        "verbose": false,
+        "model_arch": "resnet18",
+        "multi_class": true
+    },
+    "adv_misc_config": {
+        "ft_config": {
+            "sparsity": 0.5
+        }
+    },
+    "tries": 3,
+    "values": [
+            0.8
+        ],
+    "on_cpu": true,
+    "white_box": {
+        "attack": "permutation_invariant",
+        "epochs": 10,
+        "batch_size": 32,
+        "train_sample": 80,
+        "val_sample": 20,
+        "learning_rate": 1e-2,
+        "permutation_config": {
+            "focus": "all"
+        }
+    },
+    "num_victim_models": 20,
+    "adv_model_arch": "resnet18",
+    "victim_model_arch": "resnet18"
+}

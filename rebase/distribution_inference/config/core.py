@@ -6,6 +6,10 @@ from simple_parsing.helpers import Serializable, field
 
 
 @dataclass
+class FtConfig(Serializable):
+    sparsity: float = 0.5
+
+@dataclass
 class AdvTrainingConfig(Serializable):
     """
         Hyper-parameters for adversarial training.
@@ -139,6 +143,7 @@ class MiscTrainConfig(Serializable):
     """
         Miscellaneous training configurations.
     """
+    ft_config: Optional[FtConfig] = None
     adv_config: Optional[AdvTrainingConfig] = None
     """Configuration to be used for adversarial training"""
     dp_config: Optional[DPTrainingConfig] = None

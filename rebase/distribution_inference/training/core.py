@@ -12,6 +12,7 @@ from distribution_inference.config import TrainConfig, AdvTrainingConfig
 from distribution_inference.training.dp import train as train_with_dp
 from distribution_inference.training.graph import train as gcn_train
 from distribution_inference.utils import warning_string
+from distribution_inference.training.compress import compress_models
 
 
 def train(model, loaders, train_config: TrainConfig,
@@ -25,6 +26,8 @@ def train(model, loaders, train_config: TrainConfig,
     if train_config.misc_config and train_config.misc_config.dp_config:
         # If DP training, call appropriate function
         return train_with_dp(model, loaders, train_config, input_is_list, extra_options)
+    elif train_config.misc_config and train_config.misc_config.ft_config:
+        return compress_models(model, loaders) # my ft_config 
     else:
         # If DP training, call appropriate function
         return train_without_dp(model, loaders, train_config, input_is_list, extra_options, shuffle_defense)

@@ -1,0 +1,48 @@
+{
+    "name": "victim_Male_resnet50_0.8_0",
+    "start time": "2023-03-28 13:39:16.761270",
+    "train_config": {
+        "data_config": {
+            "name": "celeba",
+            "prop": "Male",
+            "value": 0.5,
+            "split": "adv",
+            "drop_senstive_cols": false,
+            "scale": 1.0,
+            "augment": false,
+            "classify": "Smiling",
+            "cwise_samples": null,
+            "squeeze": false,
+            "processed_variant": false,
+            "prune": 0
+        },
+        "epochs": 10,
+        "learning_rate": 0.0001,
+        "batch_size": 128,
+        "misc_config": {
+            "ft_config": {
+                "sparsity": 0.5
+            },
+            "adv_config": null,
+            "dp_config": null,
+            "shuffle_defense_config": null
+        },
+        "lr_scheduler": null,
+        "verbose": false,
+        "num_models": 30,
+        "offset": 0,
+        "weight_decay": 0.001,
+        "get_best": true,
+        "cpu": false,
+        "expect_extra": true,
+        "save_every_epoch": false,
+        "extra_info": null,
+        "regression": false,
+        "multi_class": false,
+        "label_noise": 0,
+        "model_arch": "resnet50",
+        "parallel": false,
+        "early_stopping": null
+    },
+    "save time": "2023-03-28 16:56:27.011041"
+}

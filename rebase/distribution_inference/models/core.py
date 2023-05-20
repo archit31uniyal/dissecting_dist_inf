@@ -2,7 +2,7 @@ import torch as ch
 import torch.nn as nn
 import numpy as np
 from typing import List, Union
-from torchvision.models import densenet121
+from torchvision.models import densenet121, resnet50, resnet18
 from sklearn.metrics import log_loss
 
 from sklearn.ensemble import RandomForestClassifier
@@ -61,6 +61,62 @@ class BaseModel(nn.Module):
     def acc(self, x, y):
         return self.model.score(x, y)
 
+class ResNet(BaseModel):
+  def __init__(self, in_channels=3, out_channels = 2):
+    super(ResNet, self).__init__(True)
+
+    # Load a pretrained resnet model from torchvision.models in Pytorch
+    self.model = resnet50(pretrained=True)
+
+    # Change the input layer to take Grayscale image, instead of RGB images. 
+    # Hence in_channels is set as 1 or 3 respectively
+    # original definition of the first layer on the ResNet class
+    # self.conv1 = nn.Conv2d(3, 64, kernel_size=7, stride=2, padding=3, bias=False)
+    # self.model.conv1 = nn.Conv2d(in_channels, 64, kernel_size=7, stride=2, padding=3, bias=False)
+    
+    # Change the output layer to output 10 classes instead of 1000 classes
+    num_ftrs = self.model.fc.in_features
+    self.model.fc = nn.Linear(num_ftrs, out_channels)
+    
+
+  def forward(self, x):
+    logits = self.model(x)
+    # probas = F.softmax(logits, dim=1)
+
+    return logits
+
+class ResNet18(BaseModel):
+  def __init__(self, in_channels=3, out_channels = 2, pretrained: bool = True):
+    super(ResNet18, self).__init__(True)
+
+    # Load a pretrained resnet model from torchvision.models in Pytorch
+    self.model = resnet18(pretrained=pretrained)
+
+    # Change the input layer to take Grayscale image, instead of RGB images. 
+    # Hence in_channels is set as 1 or 3 respectively
+    # original definition of the first layer on the ResNet class
+    # self.conv1 = nn.Conv2d(3, 64, kernel_size=7, stride=2, padding=3, bias=False)
+    # self.model.conv1 = nn.Conv2d(in_channels, 64, kernel_size=7, stride=2, padding=3, bias=False)
+    
+    # Change the output layer to output 10 classes instead of 1000 classes
+    num_ftrs = self.model.fc.in_features
+    self.model.fc = nn.Linear(num_ftrs, out_channels)
+    
+
+  def forward(self, x):
+    logits = self.model(x)
+    # probas = F.softmax(logits, dim=1)
+
+    return logits
+
+# class Resnet18WrapperForAttack(BaseModel):
+#     def __init__(self, model):
+#         self.features = nn.Sequential({model.conv1,
+#                                        model.layer1,
+#                                        model.layer2,
+#                                        model.layer3,
+#                                        model.layer4})
+#         self.classifier = model.fc
 
 class SVMClassifier(BaseModel):
     def __init__(self,

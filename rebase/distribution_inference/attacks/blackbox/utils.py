@@ -17,6 +17,7 @@ from distribution_inference.attacks.blackbox.epoch_meta import Epoch_Tree
 from distribution_inference.attacks.blackbox.perpoint_choose import PerPointChooseAttack
 from distribution_inference.attacks.blackbox.perpoint_choose_dif import PerPointChooseDifAttack
 from distribution_inference.attacks.blackbox.KL import KLAttack
+from distribution_inference.attacks.blackbox.confidence_attack import ConfidenceAttack
 from distribution_inference.attacks.blackbox.generative import GenerativeAttack
 from distribution_inference.attacks.blackbox.binary_perpoint import BinaryPerPointThresholdAttack
 from distribution_inference.attacks.blackbox.KL_regression import KLRegression
@@ -33,6 +34,7 @@ ATTACK_MAPPING = {
     "perpoint_choose": PerPointChooseAttack,
     "perpoint_choose_dif": PerPointChooseDifAttack,
     "KL": KLAttack,
+    "Conf": ConfidenceAttack,
     "generative":GenerativeAttack,
     "binary_perpoint": BinaryPerPointThresholdAttack,
     "KL_regression": KLRegression,
