@@ -20,8 +20,9 @@ class Constants:
         base_data_directory = "<PATH_TO_DATA_DIRECTORY_FOR_CLUSTER>"
         base_models_directory = "<PATH_TO_MODELS_DIRECTORY_FOR_CLUSTER>"
     else:
-        base_data_directory = "<PATH_TO_DATA_DIRECTORY>"
-        base_models_directory = "<PATH_TO_MODELS_DIRECTORY>"
+        # base_data_directory = "<PATH_TO_DATA_DIRECTORY>"
+        base_data_directory = "/p/adversarialml/as9rw/datasets/"
+        base_models_directory = "/p/compressionleakage/Compressed/compression_cv/models/celeba"
 
 
 class DatasetInformation:
@@ -358,7 +359,8 @@ class CustomDatasetWrapper:
                     break
 
                 # Skip models with model_num below train_config.offset
-                if not (mpath.startswith("adv_train_") or mpath == "full" or mpath == "drop") and (not custom_models_path) and int(mpath.split("_")[0]) <= train_config.offset:
+                
+                if not (mpath.startswith("adv_train_") or mpath.startswith("ft_train_") or mpath == "full" or mpath == "drop") and (not custom_models_path) and int(mpath.split("_")[0]) <= train_config.offset:
                     continue
 
                 # Skip any directories we may stumble upon
