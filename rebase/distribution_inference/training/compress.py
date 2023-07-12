@@ -177,6 +177,3 @@ def compress_models(model, loaders, trainer = trainer_tune, evaluate = evaluate_
     val_loss, val_acc = evaluate_tune(model)
     # pruner.export_model(f'{directory}/models/celeba/resnet50/adv/Male/0.5/ft_train_0.5000/32.ch')
     return model, (val_loss, val_acc)
-
-
-    
