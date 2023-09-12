@@ -145,9 +145,12 @@ def threshold_test_per_dist(calc_acc: Callable,
         else:
             pv1_use, pv2_use = pv1[:leng], pv2[:leng]
 
-        # Calculate accuracies for these points in [0,100]
-        accs_1 = 100 * calc_acc(p1_use, yg_use, multi_class=multi_class)
-        accs_2 = 100 * calc_acc(p2_use, yg_use, multi_class=multi_class)
+        # # Calculate accuracies for these points in [0,100]
+        # accs_1 = 100 * calc_acc(p1_use, yg_use, multi_class=multi_class)
+        # accs_2 = 100 * calc_acc(p2_use, yg_use, multi_class=multi_class)
+
+        accs_1 = calc_acc(p1_use, yg_use, multi_class=multi_class)
+        accs_2 = calc_acc(p2_use, yg_use, multi_class=multi_class)
 
         # Find a threshold on these accuracies that maximizes
         # distinguishing accuracy

@@ -74,6 +74,31 @@ def calculate_accuracies(data, labels,
 
     return np.average(1. * (preds == expanded_gt), axis=0)
 
+def calculate_losses(data, labels,
+                         use_logit: bool = True,
+                         multi_class: bool = False):
+    """
+        Function to compute model-wise average-loss on
+        given data.
+    """
+    # Get predictions from each model (each model outputs logits)
+    if multi_class:
+        assert len(data.shape) == 3, "Multi-class data must be 3D"
+        preds = np.argmax(data, axis=2).astype('int')
+    else:
+        assert len(data.shape) == 2, "Data should be 2D"
+        if use_logit:
+            preds = (data >= 0).astype('int')
+        else:
+            preds = (data >= 0.5).astype('int')
+
+    loss = nn.CrossEntropyLoss()
+    # Repeat ground-truth (across models)
+    expanded_gt = np.repeat(np.expand_dims(
+        labels, axis=1), preds.shape[1], axis=1)
+
+    return np.average(1. * loss(preds, expanded_gt), axis=0)
+
 
 def get_graph_preds(ds, indices,
                     models: List[nn.Module],

@@ -79,7 +79,10 @@ class ResNet(BaseModel):
     self.model.fc = nn.Linear(num_ftrs, out_channels)
     
 
-  def forward(self, x):
+  def forward(self, x, want_latent=False):
+    all_outputs = self.model(x)
+    if not want_latent:
+        return logits
     logits = self.model(x)
     # probas = F.softmax(logits, dim=1)
 

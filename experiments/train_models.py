@@ -113,6 +113,7 @@ if __name__ == "__main__":
         # Get data loaders
         train_loader, val_loader = ds.get_loaders(
             batch_size=train_config.batch_size)
+        
         #print(1/(len(train_loader.dataset)*train_config.batch_size))
         # print(len(val_loader.dataset))
         #exit(0)

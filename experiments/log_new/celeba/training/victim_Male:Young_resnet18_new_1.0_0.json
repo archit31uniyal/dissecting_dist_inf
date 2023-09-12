@@ -1,0 +1,41 @@
+{
+    "name": "victim_Male:Young_resnet18_new_1.0_0",
+    "start time": "2023-09-02 17:02:10.706653",
+    "train_config": {
+        "data_config": {
+            "name": "celeba",
+            "prop": "Male:Young",
+            "value": 0.0,
+            "split": "victim",
+            "drop_senstive_cols": false,
+            "scale": 1.0,
+            "augment": false,
+            "classify": "Smiling",
+            "cwise_samples": null,
+            "squeeze": false,
+            "processed_variant": false,
+            "prune": 0
+        },
+        "epochs": 5,
+        "learning_rate": 0.001,
+        "batch_size": 256,
+        "misc_config": null,
+        "lr_scheduler": null,
+        "verbose": true,
+        "num_models": 20,
+        "offset": 0,
+        "weight_decay": 0.0,
+        "get_best": true,
+        "cpu": false,
+        "expect_extra": true,
+        "save_every_epoch": false,
+        "extra_info": null,
+        "regression": false,
+        "multi_class": true,
+        "label_noise": 0,
+        "model_arch": "resnet18_new",
+        "parallel": false,
+        "early_stopping": null
+    },
+    "save time": "2023-09-02 18:37:56.967197"
+}

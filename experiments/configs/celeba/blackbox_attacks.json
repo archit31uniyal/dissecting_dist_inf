@@ -2,10 +2,10 @@
     "train_config": {
         "data_config": {
             "name": "celeba",
-            "prop": "Male",
+            "prop": "Male:Young",
             "classify": "Smiling",
-            "split": "adv",
-            "value": 0.5,
+            "split": "victim",
+            "value": 0.0,
             "processed_variant": false
         },
         "misc_config": {
@@ -30,15 +30,12 @@
     },
     "tries": 10,
     "values": [
-            0.2,
-            0.4,
-            0.6,
-            0.8
+            1.0
         ],
     "on_cpu": true,
     "black_box": {
         "granularity": 0.005,
-        "num_adv_models": 50,
+        "num_adv_models": 30,
         "batch_size": 1280,
         "attack_type": [
             "loss_and_threshold",
@@ -53,7 +50,7 @@
         "merlin_neighbors": 10,
         "multi_class": true
     },
-    "num_victim_models": 20,
+    "num_victim_models": 15,
     "adv_model_arch": "resnet18",
     "victim_model_arch": "resnet18"
 }

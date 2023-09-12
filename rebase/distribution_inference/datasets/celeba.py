@@ -25,9 +25,10 @@ class DatasetInformation(base.DatasetInformation):
                          data_path="celeba",
                          models_path="models_celeba/75_25_nobalancing",
                          properties=["Male", "Young",
-                                     'Wavy_Hair', 'High_Cheekbones'],
+                                     'Wavy_Hair', 'High_Cheekbones',
+                                     "Male:Young", 'Double_Chin', 'Eyeglasses', 'Narrow_Eyes', 'Blond_Hair'],
                          values={"Male": ratios, "Young": ratios,
-                                 'Wavy_Hair': ratios, 'High_Cheekbones': ratios},
+                                 'Wavy_Hair': ratios, 'High_Cheekbones': ratios, "Male:Young": ratios},
                          supported_models=["inception", "alexnet", "mlp2", "resnet50", 'resnet50_new', "resnet18", 'resnet18_new'],
                          default_model="alexnet",
                          epoch_wise=epoch_wise)
@@ -269,7 +270,13 @@ class CelebACustomBinary(base.CustomDataset):
         self.info_object = DatasetInformation()
         self.classify_index = self.info_object.supported_properties.index(
             classify)
-        self.prop_index = self.info_object.supported_properties.index(prop)
+        if ":" in prop:
+            prop = prop.split(":")
+            self.prop_index = self.info_object.supported_properties.index(prop[0])
+            self.prop_index_other = self.info_object.supported_properties.index(prop[1])
+        else:
+            self.prop_index = self.info_object.supported_properties.index(prop)
+            self.prop_index_other = None
 
         # Get filenames
         with open(filelist_path) as f:
@@ -316,7 +323,10 @@ class CelebACustomBinary(base.CustomDataset):
         df = self._create_df(attr_dict, filenames)
 
         # Make filter
-        def condition(x): return x[prop] == 1
+        def condition(x):
+            if type(prop) is list: 
+                return (x[prop[0]] == 1) & (x[prop[1]] == 1)
+            return x[prop] == 1
 
         if indices is not None:
             parsed_df = df.iloc[indices]
@@ -390,11 +400,16 @@ class CelebACustomBinary(base.CustomDataset):
 
         y = np.array(list(self.attr_dict[filename].values()))
 
+        if self.prop_index_other is not None:
+            prop_return = 1 * (y[self.prop_index_other] and y[self.prop_index])
+        else:
+            prop_return = y[self.prop_index]
+
         if should_augment:
             # Augment data
-            return self.process_fn((x, y[self.classify_index], y[self.prop_index]))
+            return self.process_fn((x, y[self.classify_index], prop_return))
 
-        return x, y[self.classify_index], y[self.prop_index]
+        return x, y[self.classify_index], prop_return
 
 
 class CelebaWrapper(base.CustomDatasetWrapper):
@@ -482,11 +497,15 @@ class CelebaWrapper(base.CustomDatasetWrapper):
             "Smiling": {
                 "adv": {
                     "Male": (16000, 1500),
-                    "Young": (9000, 1100)
+                    "Young": (9000, 1100),
+                    "Male:Young": (10000, 1000),
+                    "Narrow_Eyes": (4500, 700)
                 },
                 "victim": {
                     "Male": (45000, 4000),
                     "Young": (30000, 3000),
+                    "Male:Young": (32000, 3000),
+                    "Narrow_Eyes": (15000, 2000)
                 }
             },
             "Male": {
@@ -584,7 +603,8 @@ class CelebaWrapper(base.CustomDatasetWrapper):
 
     def get_save_dir(self, train_config: TrainConfig, model_arch: str) -> str:
         # base_models_dir = self.info_object.base_models_dir
-        base_models_dir = "/p/compressionleakage/logs/Compressed/compression_cv/models/celeba"
+        # dir = "_".join(train_config.data_config.prop.split(":"))
+        base_models_dir = f"/p/compressionleakage/logs/Compressed/compression_cv/models/celeba/"
         subfolder_prefix = os.path.join(
             self.split, self.prop, str(self.ratio)
         )

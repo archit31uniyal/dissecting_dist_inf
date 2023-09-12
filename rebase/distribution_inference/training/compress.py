@@ -136,7 +136,7 @@ def evaluate_tune(model):
     return val_losses/val_batches, correct_testpreds.float()/num_examples
 
 
-def compress_models(model, loaders, trainer = trainer_tune, evaluate = evaluate_tune):
+def compress_models(model, loaders, property, trainer = trainer_tune, evaluate = evaluate_tune, ):
     global train_loader, val_loader
     
     train_loader, val_loader = loaders[0], loaders[1]
@@ -170,7 +170,7 @@ def compress_models(model, loaders, trainer = trainer_tune, evaluate = evaluate_
     pruner = AutoCompressPruner(
                 model, config_list, trainer=trainer, evaluator=evaluate,
                 dummy_input=dummy_input, num_iterations=2, optimize_mode='maximize', base_algo='l1',
-                cool_down_rate=0.9, admm_num_iterations=2, admm_epochs_per_iteration = 3, experiment_data_dir=f'/p/compressionleakage/logs/Compressed/compression_cv/models/celeba')
+                cool_down_rate=0.9, admm_num_iterations=2, admm_epochs_per_iteration = 3, experiment_data_dir=f'/p/compressionleakage/logs/Compressed/compression_cv/models/celeba/{property}')
     model = pruner.compress()
 
     # torch.save(model.state_dict(), f'{directory}/models/celeba/')

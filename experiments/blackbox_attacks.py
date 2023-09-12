@@ -5,7 +5,7 @@ from simple_parsing import ArgumentParser
 from pathlib import Path
 import os
 from distribution_inference.datasets.utils import get_dataset_wrapper, get_dataset_information
-from distribution_inference.attacks.blackbox.utils import get_attack, calculate_accuracies, get_vic_adv_preds_on_distr
+from distribution_inference.attacks.blackbox.utils import get_attack, calculate_accuracies, get_vic_adv_preds_on_distr, calculate_losses
 from distribution_inference.attacks.blackbox.core import PredictionsOnDistributions
 from distribution_inference.attacks.utils import get_dfs_for_victim_and_adv, get_train_config_for_adv
 from distribution_inference.config import DatasetConfig, AttackConfig, BlackBoxAttackConfig, TrainConfig
@@ -169,13 +169,19 @@ if __name__ == "__main__":
                     attacker_obj = get_attack(attack_type)(bb_attack_config)
 
                     # Launch attack
+                    # result = attacker_obj.attack(
+                    #     preds_adv, preds_vic,
+                    #     ground_truth=(ground_truth_1, ground_truth_2),
+                    #     calc_acc=calculate_accuracies,
+                    #     epochwise_version=attack_config.train_config.save_every_epoch,
+                    #     not_using_logits=not_using_logits,)
                     result = attacker_obj.attack(
                         preds_adv, preds_vic,
                         ground_truth=(ground_truth_1, ground_truth_2),
-                        calc_acc=calculate_accuracies,
+                        calc_acc=calculate_losses,
                         epochwise_version=attack_config.train_config.save_every_epoch,
                         not_using_logits=not_using_logits,)
-
+                    
                     logger.add_results(attack_type, prop_value,
                                        result[0][0], result[1][0])
                     print(result[0][0])

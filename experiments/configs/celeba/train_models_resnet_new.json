@@ -1,17 +1,17 @@
 {
     "data_config": {
         "name": "celeba",
-        "prop": "Male",
+        "prop": "Male:Young",
         "classify": "Smiling",
         "split": "victim",
-        "value": 0.8,
+        "value": 1.0,
         "processed_variant": false
     },
     "epochs": 5,
     "learning_rate": 1e-3,
     "batch_size": 256,
     "weight_decay": 0,
-    "num_models": 90,
+    "num_models": 20,
     "get_best": true,
     "verbose": true,
     "model_arch": "resnet18_new",

@@ -27,7 +27,7 @@ def train(model, loaders, train_config: TrainConfig,
         # If DP training, call appropriate function
         return train_with_dp(model, loaders, train_config, input_is_list, extra_options)
     elif train_config.misc_config and train_config.misc_config.ft_config:
-        return compress_models(model, loaders) # my ft_config 
+        return compress_models(model, loaders, property=train_config.data_config.prop) # my ft_config 
     else:
         # If DP training, call appropriate function
         return train_without_dp(model, loaders, train_config, input_is_list, extra_options, shuffle_defense)
