@@ -26,9 +26,11 @@ class DatasetInformation(base.DatasetInformation):
                          models_path="models_celeba/50_50_nobalancing",
                          properties=["Male", "Young",
                                      'Wavy_Hair', 'High_Cheekbones',
-                                     "Male:Young", 'Double_Chin', 'Eyeglasses', 'Narrow_Eyes', 'Blond_Hair'],
+                                     "Male:Young", 'Double_Chin', 'Eyeglasses', 'Narrow_Eyes', 'Blond_Hair', "Mouth_Slightly_Open"],
                          values={"Male": ratios, "Young": ratios,
-                                 'Wavy_Hair': ratios, 'High_Cheekbones': ratios, "Male:Young": ratios, 'Double_Chin': ratios, 'Eyeglasses': ratios, 'Narrow_Eyes': ratios, 'Blond_Hair': ratios},
+                                 'Wavy_Hair': ratios, 'High_Cheekbones': ratios, 
+                                 "Male:Young": ratios, 'Double_Chin': ratios, 'Eyeglasses': ratios, 
+                                 'Narrow_Eyes': ratios, 'Blond_Hair': ratios, 'Mouth_Slightly_Open': ratios},
                          supported_models=["inception", "alexnet", "mlp2", "resnet50", 'resnet50_new', "resnet18", 'resnet18_new'],
                          default_model="alexnet",
                          epoch_wise=epoch_wise)
@@ -515,7 +517,8 @@ class CelebaWrapper(base.CustomDatasetWrapper):
                     "Eyeglasses": (5800, 600),
                     "Blond_Hair": (13000, 1200),
                     "Double_Chin": (4100, 400),
-                    "High_Cheekbones": (41000, 4600)
+                    "High_Cheekbones": (41000, 4600),
+                    "Mouth_Slightly_Open": (43000, 4800)
                 },
                 "victim": {
                     "Male": (45000, 4000),
@@ -525,7 +528,8 @@ class CelebaWrapper(base.CustomDatasetWrapper):
                     "Eyeglasses": (5800, 600),
                     "Blond_Hair": (13800, 1200),
                     "Double_Chin": (4200, 400),
-                    "High_Cheekbones": (41000, 4700)
+                    "High_Cheekbones": (41000, 4700),
+                    "Mouth_Slightly_Open": (44000, 4700)
                 }
             },
             "Male": {
