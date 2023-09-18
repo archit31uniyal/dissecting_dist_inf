@@ -1,11 +1,11 @@
 {
     "name": "adv_Male:Young_resnet18_0.2_0",
-    "start time": "2023-09-08 15:36:35.632376",
+    "start time": "2023-09-14 21:58:45.089322",
     "train_config": {
         "data_config": {
             "name": "celeba",
-            "prop": "Narrow_Eyes",
-            "value": 1.0,
+            "prop": "Eyeglasses",
+            "value": 0.0,
             "split": "adv",
             "drop_senstive_cols": false,
             "scale": 1.0,
@@ -44,5 +44,5 @@
         "parallel": false,
         "early_stopping": null
     },
-    "save time": "2023-09-08 17:04:39.073670"
+    "save time": "2023-09-14 23:30:31.122924"
 }

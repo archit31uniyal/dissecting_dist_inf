@@ -136,7 +136,7 @@ def evaluate_tune(model):
     return val_losses/val_batches, correct_testpreds.float()/num_examples
 
 
-def compress_models(model, loaders, property, trainer = trainer_tune, evaluate = evaluate_tune, ):
+def compress_models(model, loaders, property, trainer = trainer_tune, evaluate = evaluate_tune):
     global train_loader, val_loader
     
     train_loader, val_loader = loaders[0], loaders[1]

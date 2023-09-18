@@ -62,7 +62,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import nni
 from nni.algorithms.compression.pytorch.pruning import *
-from distribution_inference.training.utils_compress import *
+# from distribution_inference.training.utils_compress import *
 from torch.nn.parallel import DistributedDataParallel
 import torch.distributed as dist
 from distribution_inference.training.get_data_backup import *
@@ -728,7 +728,7 @@ if __name__ == '__main__':
         torch.manual_seed(i)
 
         log_file = os.path.join(directory, f"log_reports/stdout_class_{clipped_class}_ratio_{clip_percentage}_sparsity_{sparsity}_iter_{i}")
-        logger = Logger(log_file)
+        # logger = Logger(log_file)
 
         train_loader, val_loader = get_data('CIFAR10', None, None, 256, 256)
         M0 = compress(model, train_loader, val_loader, trainer, evaluate, sparsity) # Model compressed on CIFAR10 with class 6

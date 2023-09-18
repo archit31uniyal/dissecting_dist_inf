@@ -23,12 +23,12 @@ class DatasetInformation(base.DatasetInformation):
         ratios = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
         super().__init__(name="Celeb-A",
                          data_path="celeba",
-                         models_path="models_celeba/75_25_nobalancing",
+                         models_path="models_celeba/50_50_nobalancing",
                          properties=["Male", "Young",
                                      'Wavy_Hair', 'High_Cheekbones',
                                      "Male:Young", 'Double_Chin', 'Eyeglasses', 'Narrow_Eyes', 'Blond_Hair'],
                          values={"Male": ratios, "Young": ratios,
-                                 'Wavy_Hair': ratios, 'High_Cheekbones': ratios, "Male:Young": ratios},
+                                 'Wavy_Hair': ratios, 'High_Cheekbones': ratios, "Male:Young": ratios, 'Double_Chin': ratios, 'Eyeglasses': ratios, 'Narrow_Eyes': ratios, 'Blond_Hair': ratios},
                          supported_models=["inception", "alexnet", "mlp2", "resnet50", 'resnet50_new', "resnet18", 'resnet18_new'],
                          default_model="alexnet",
                          epoch_wise=epoch_wise)
@@ -246,13 +246,13 @@ class DatasetInformation(base.DatasetInformation):
                 f.writelines("%s\n" % l for l in data)
 
         save(test_adv_filenames, os.path.join(
-            "splits", "75_25", "adv", "test.txt"))
+            "splits", "50_50", "adv", "test.txt"))
         save(test_victim_filenames, os.path.join(
-            "splits", "75_25", "victim", "test.txt"))
+            "splits", "50_50", "victim", "test.txt"))
         save(train_adv_filenames, os.path.join(
-            "splits", "75_25", "adv", "train.txt"))
+            "splits", "50_50", "adv", "train.txt"))
         save(train_victim_filenames, os.path.join(
-            "splits", "75_25", "victim", "train.txt"))
+            "splits", "50_50", "victim", "train.txt"))
 
 
 class CelebACustomBinary(base.CustomDataset):
@@ -473,39 +473,59 @@ class CelebaWrapper(base.CustomDatasetWrapper):
         
         filelist_train = os.path.join(
             self.info_object.base_data_dir,
-            "splits", "75_25", self.split, "train.txt")
+            "splits", "50_50", self.split, "train.txt")
         filelist_test = os.path.join(
             self.info_object.base_data_dir,
-            "splits", "75_25", self.split, "test.txt")
+            "splits", "50_50", self.split, "test.txt")
 
         # filelist_train_vic = os.path.join(
         #     self.info_object.base_data_dir,
-        #     "splits", "75_25", 'victim', "train.txt")
+        #     "splits", "50_50", 'victim', "train.txt")
         # filelist_test_vic = os.path.join(
         #     self.info_object.base_data_dir,
-        #     "splits", "75_25", 'victim', "test.txt")
+        #     "splits", "50_50", 'victim', "test.txt")
         
         # filelist_train_adv = os.path.join(
         #     self.info_object.base_data_dir,
-        #     "splits", "75_25", 'adv', "train.txt")
+        #     "splits", "50_50", 'adv', "train.txt")
         # filelist_test_adv = os.path.join(
         #     self.info_object.base_data_dir,
-        #     "splits", "75_25", 'adv', "test.txt")
+        #     "splits", "50_50", 'adv', "test.txt")
 
         # Define number of sub-samples
         prop_wise_subsample_sizes = {
             "Smiling": {
+                # "adv": {
+                #     "Male": (16000, 1500),
+                #     "Young": (9000, 1100),
+                #     "Male:Young": (10000, 1000),
+                #     "Narrow_Eyes": (4500, 700)
+                # },
+                # "victim": {
+                #     "Male": (45000, 4000),
+                #     "Young": (30000, 3000),
+                #     "Male:Young": (32000, 3000),
+                #     "Narrow_Eyes": (15000, 2000)
+                # }
                 "adv": {
                     "Male": (16000, 1500),
                     "Young": (9000, 1100),
                     "Male:Young": (10000, 1000),
-                    "Narrow_Eyes": (4500, 700)
+                    "Narrow_Eyes": (9500, 1450),
+                    "Eyeglasses": (5800, 600),
+                    "Blond_Hair": (13000, 1200),
+                    "Double_Chin": (4100, 400),
+                    "High_Cheekbones": (41000, 4600)
                 },
                 "victim": {
                     "Male": (45000, 4000),
                     "Young": (30000, 3000),
                     "Male:Young": (32000, 3000),
-                    "Narrow_Eyes": (15000, 2000)
+                    "Narrow_Eyes": (9500, 1450),
+                    "Eyeglasses": (5800, 600),
+                    "Blond_Hair": (13800, 1200),
+                    "Double_Chin": (4200, 400),
+                    "High_Cheekbones": (41000, 4700)
                 }
             },
             "Male": {

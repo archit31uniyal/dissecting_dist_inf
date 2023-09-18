@@ -22,7 +22,7 @@ class Constants:
     else:
         # base_data_directory = "<PATH_TO_DATA_DIRECTORY>"
         base_data_directory = "/p/adversarialml/as9rw/datasets/"
-        base_models_directory = "/p/compressionleakage/Compressed/compression_cv/models/celeba"
+        base_models_directory = "/p/compressionleakage/logs/Compressed/compression_cv/models/celeba"
 
 
 class DatasetInformation:
